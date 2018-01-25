@@ -1,0 +1,4 @@
+新增协议打印log  CAN  KWP
+新增两个软狗
+没有PWM VPW协议
+屏蔽多余的IO口加强GPS信号

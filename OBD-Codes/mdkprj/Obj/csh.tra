@@ -1,0 +1,41 @@
+*** Creating Trace Output File '.\Obj\csh.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '".\obj\misc.o"'
+### List of Objects: adding '".\obj\stm32f10x_can.o"'
+### List of Objects: adding '".\obj\stm32f10x_flash.o"'
+### List of Objects: adding '".\obj\stm32f10x_gpio.o"'
+### List of Objects: adding '".\obj\stm32f10x_pwr.o"'
+### List of Objects: adding '".\obj\stm32f10x_rcc.o"'
+### List of Objects: adding '".\obj\stm32f10x_tim.o"'
+### List of Objects: adding '".\obj\stm32f10x_usart.o"'
+### List of Objects: adding '".\obj\stm32f10x_iwdg.o"'
+### List of Objects: adding '".\obj\stm32f10x_adc.o"'
+### List of Objects: adding '".\obj\stm32f10x_dma.o"'
+### List of Objects: adding '".\obj\core_cm3.o"'
+### List of Objects: adding '".\obj\startup_stm32f10x_md.o"'
+### List of Objects: adding '".\obj\stm32f10x_it.o"'
+### List of Objects: adding '".\obj\system_stm32f10x.o"'
+### List of Objects: adding '".\obj\bsp.o"'
+### List of Objects: adding '".\obj\main.o"'
+### List of Objects: adding '".\obj\pidarith.o"'
+### List of Objects: adding '".\obj\oilarith.o"'
+### List of Objects: adding '".\obj\protocol.o"'
+### List of Objects: adding '"..\..\DS-06-3 - printandiwdog -NewClock - 副本\mdkprj\Obj\OBD.lib"'
+### List of Objects: adding '".\obj\tools.o"'
+### ADS-LD Command completed:
+--cpu Cortex-M3 ".\obj\misc.o" ".\obj\stm32f10x_can.o" ".\obj\stm32f10x_flash.o" ".\obj\stm32f10x_gpio.o" ".\obj\stm32f10x_pwr.o" ".\obj\stm32f10x_rcc.o" ".\obj\stm32f10x_tim.o" ".\obj\stm32f10x_usart.o" ".\obj\stm32f10x_iwdg.o" ".\obj\stm32f10x_adc.o" ".\obj\stm32f10x_dma.o" ".\obj\core_cm3.o" ".\obj\startup_stm32f10x_md.o" ".\obj\stm32f10x_it.o" ".\obj\system_stm32f10x.o" ".\obj\bsp.o" ".\obj\main.o" ".\obj\pidarith.o" ".\obj\oilarith.o" ".\obj\protocol.o" "..\..\DS-06-3 - printandiwdog -NewClock - 副本\mdkprj\Obj\OBD.lib" ".\obj\tools.o" --library_type=microlib --feedback ".\Obj\csh.fed" 
+--strict --scatter ".\Obj\csh.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\List\csh.map" -o ".\Obj\csh.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: '.\Obj\csh.axf'
+### ADS-LD Command File: '.\Obj\csh.lnp'
+### Checking for dirty Components...
+### Creating CmdFile '.\Obj\csh.lnp', Handle=0x00000798
+### Writing '.lnp' file
+### ADS-LD Command file '.\Obj\csh.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

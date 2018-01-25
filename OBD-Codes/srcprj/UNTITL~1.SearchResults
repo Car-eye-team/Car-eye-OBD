@@ -1,0 +1,3 @@
+---- BUZZER_OUT_EN Matches (2 in 2 files) ----
+Includes.h (d:\工作文件\all-obd\idd-212\software\source\source):#define     BUZZER_OUT_EN
+Main.c (d:\工作文件\all-obd\idd-212\software\source\source):		#ifdef BUZZER_OUT_EN

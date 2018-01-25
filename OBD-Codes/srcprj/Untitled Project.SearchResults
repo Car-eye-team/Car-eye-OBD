@@ -1,0 +1,22 @@
+---- HSE_VALUE Matches (21 in 4 files) ----
+Release_Notes_for_STM32F10x_CMSIS.html (e:\hr-01\software\libraries\cmsis\cm3\devicesupport\st):HSI_Value and HSEStartup_TimeOut changed to upper case: HSE_VALUE,
+Stm32f10x.h (e:\hr-01\software\libset):#if !defined  HSE_VALUE
+Stm32f10x.h (e:\hr-01\software\libset):  #define HSE_VALUE    ((uint32_t)25000000) /*!< Value of the External oscillator in Hz */
+Stm32f10x.h (e:\hr-01\software\libset):  #define HSE_VALUE    ((uint32_t)12000000) /*!< Value of the External oscillator in Hz */
+Stm32f10x.h (e:\hr-01\software\libset):#endif /* HSE_VALUE */
+Stm32f10x.h (e:\hr-01\software\libset):#define HSE_Value            HSE_VALUE
+Stm32f10x_rcc.c (e:\hr-01\software\libraries\stm32f10x_stdperiph_driver\src):      RCC_Clocks->SYSCLK_Frequency = HSE_VALUE;
+Stm32f10x_rcc.c (e:\hr-01\software\libraries\stm32f10x_stdperiph_driver\src):       RCC_Clocks->SYSCLK_Frequency = (HSE_VALUE / prediv1factor) * pllmull; 
+Stm32f10x_rcc.c (e:\hr-01\software\libraries\stm32f10x_stdperiph_driver\src):          RCC_Clocks->SYSCLK_Frequency = (HSE_VALUE >> 1) * pllmull;
+Stm32f10x_rcc.c (e:\hr-01\software\libraries\stm32f10x_stdperiph_driver\src):          RCC_Clocks->SYSCLK_Frequency = HSE_VALUE * pllmull;
+Stm32f10x_rcc.c (e:\hr-01\software\libraries\stm32f10x_stdperiph_driver\src):          RCC_Clocks->SYSCLK_Frequency = (HSE_VALUE / prediv1factor) * pllmull;          
+Stm32f10x_rcc.c (e:\hr-01\software\libraries\stm32f10x_stdperiph_driver\src):          RCC_Clocks->SYSCLK_Frequency = (((HSE_VALUE / prediv2factor) * pll2mull) / prediv1factor) * pllmull;                         
+System_stm32f10x.c (e:\hr-01\software\libset):// #define SYSCLK_FREQ_HSE    HSE_VALUE */
+System_stm32f10x.c (e:\hr-01\software\libset)://#define SYSCLK_FREQ_HSE    HSE_VALUE
+System_stm32f10x.c (e:\hr-01\software\libset):      SystemCoreClock = HSE_VALUE;
+System_stm32f10x.c (e:\hr-01\software\libset):       SystemCoreClock = (HSE_VALUE / prediv1factor) * pllmull; 
+System_stm32f10x.c (e:\hr-01\software\libset):          SystemCoreClock = (HSE_VALUE >> 1) * pllmull;
+System_stm32f10x.c (e:\hr-01\software\libset):          SystemCoreClock = HSE_VALUE * pllmull;
+System_stm32f10x.c (e:\hr-01\software\libset):          SystemCoreClock = (HSE_VALUE / prediv1factor) * pllmull;          
+System_stm32f10x.c (e:\hr-01\software\libset):          SystemCoreClock = (((HSE_VALUE / prediv2factor) * pll2mull) / prediv1factor) * pllmull;                         
+System_stm32f10x.c (e:\hr-01\software\libset):    if (HSE_VALUE <= 24000000)

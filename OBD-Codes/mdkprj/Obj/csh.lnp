@@ -1,0 +1,5 @@
+--cpu Cortex-M3 ".\obj\misc.o" ".\obj\stm32f10x_can.o" ".\obj\stm32f10x_flash.o" ".\obj\stm32f10x_gpio.o" ".\obj\stm32f10x_pwr.o" ".\obj\stm32f10x_rcc.o" ".\obj\stm32f10x_tim.o" ".\obj\stm32f10x_usart.o" ".\obj\stm32f10x_iwdg.o" ".\obj\stm32f10x_adc.o" ".\obj\stm32f10x_dma.o" ".\obj\core_cm3.o" ".\obj\startup_stm32f10x_md.o" ".\obj\stm32f10x_it.o" ".\obj\system_stm32f10x.o" ".\obj\bsp.o" ".\obj\main.o" ".\obj\pidarith.o" ".\obj\oilarith.o" ".\obj\protocol.o" "..\..\DS-06-3 - printandiwdog -NewClock - ¸±±¾\mdkprj\Obj\OBD.lib" ".\obj\tools.o" --library_type=microlib --feedback ".\Obj\csh.fed" 
+--strict --scatter ".\Obj\csh.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\List\csh.map" -o ".\Obj\csh.axf"
