@@ -1072,78 +1072,7 @@ u32 SVR_LicenseGet(u8 *cmd, u32 cmdlen, u32 stime){
 	  }
 	return 2;
 }
-/*
-u32 SVR_LicenseGet(u8 *cmd, u32 cmdlen, u32 stime){
-	u8 u8result;
-	u16 datalenu16,u16t1;
-	u32 time,time1;
-	u8 *dataread;
-	u32 framelen,datalen,dataindex;
-	
-	if(NULL == cmd || cmdlen < 2)return 1;
-	user_infor("SVR_LicenseGet>>");
-	u8result = SVR_FrameSendEx(cmd, cmdlen, stime);
-	if(u8result != 0){
-		user_debug("SVR_LicenseGet cmdsend error");
-		return 1;
-	}
-	time = 0;
-	dataindex = 0;
-	while(1){
-		datalenu16 = MDM_DataToApp(&dataread);
-		if(datalenu16 > 100){
-			for(u16t1 = 0; u16t1 < datalenu16; u16t1 ++){
-				if(SER_FRAME_FMT1 == *(dataread + u16t1) && SER_FRAME_FMT2 == *(dataread + u16t1 + 1)){
-			      break;
-		    }
-			}
-			u16t1 += 2;
-			framelen = *(dataread + u16t1 ++);
-			framelen = (framelen << 8) + *(dataread + u16t1 ++);
-			if(0x84 == *(dataread + u16t1) && 0x10 == *(dataread + u16t1 + 1) && 1024 == framelen - 4){
-				u16t1 += 2;
-				u16t1 += 2;//跳过2个无效的长度字节
-				datalen = framelen - 4;
-				update_start(datalen, UPDATE_OBD_LICENSE, "Lincese");
-			}
-			else datalen = 0;
-			user_infor("SVR_LicenseGet:[%d-%d-%d-%d]",framelen,datalen,u16t1,datalenu16);
-			if(u16t1 < datalenu16 && (datalen + 4) == framelen){
-				dataindex = 0;
-				dataindex = datalenu16 - u16t1;
-				update_datain(dataread + u16t1, dataindex);
-				time1 = 0;
-				while(1){
-					eat_sleep(5);
-					time1 ++;
-					if(time1 > 200){
-						user_debug("SVR_LicenseGet overtime1");
-						return 2;
-					}
-					datalenu16 = MDM_DataToApp(&dataread);
-					if(datalenu16){
-						  time1 = 0;
-						  user_infor("SVR_LicenseGet[%d-%d]",dataindex, datalenu16);
-						  if(dataindex + datalenu16 > 1024)datalenu16 = 1024 - dataindex;
-						  update_datain(dataread, datalenu16);
-						  dataindex += datalenu16;
-				  }
-				  if(dataindex >= 1024){//数据接收完成
-				  	return update_obdlicense();
-				  }
-				}
-			}
-		}
-		time ++;
-		if(time > 1000){
-			user_debug("SVR_LicenseGet overtime");
-			return 2;
-		}
-		eat_sleep(5);
-	}
-	return 2;
-}
-*/
+
 /*获取星历数据
 */
 u32 SVR_gps_online(u8 *gpsdata, u32 lat, u32 log)

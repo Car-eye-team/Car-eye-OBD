@@ -97,7 +97,7 @@ u8 bigmem_obdgps_in(u8 *datain, u16 datalen)
 	if(2 == LbigmemFlag)return 2;//失败
 	if(0 == LbigmemFlag)
 	{
-		user_debug("lilei--first fill LBigBUf\r\n");                                 //---lilei---add by lilei-2016-0613
+		user_debug("lilei--first fill LBigBUf\r\n");                                 //
 		LbigmemFlag = 1;											//big_mem被用于保存OBD+gps数据
 		Lbigmem.dataindex = 0;
 		Lbigmem.datalen = 0;
@@ -108,7 +108,7 @@ u8 bigmem_obdgps_in(u8 *datain, u16 datalen)
 	if(Lbigmem.datalen + datalen >= (DATA_LOG_FILE_MAX - 512))
 	{//缓冲区满 需要将数据保存到2级缓冲区中
 		//数据保存到2级缓冲区
-		user_debug("lilei-BigMem data cnt >1024*100 save file\r\n");         //add by lilei--2016-0613
+		user_debug("lilei-BigMem data cnt >1024*100 save file\r\n");         //
 		db_filesave(Lbigmemory, Lbigmem.dataindex, 0);
 		Lbigmem.dataindex = 0;
 		Lbigmem.datalen = 0;
@@ -128,7 +128,7 @@ u8 bigmem_obdgps_in(u8 *datain, u16 datalen)
 	if(Lbigmem.msgnum >= BIG_MEM_MSG_MAX)
 	{//缓冲区数据满
 		//数据保存到2级缓冲区
-		user_debug("lilei-BigMem stareamer>1280 save file\r\n");					//add by lilei--2016-0613
+		user_debug("BigMem stareamer>1280 save file\r\n");					
 		db_filesave(Lbigmemory, Lbigmem.dataindex, 0);
 		Lbigmem.dataindex = 0;
 		Lbigmem.datalen = 0;
@@ -218,13 +218,13 @@ u16 bigmem_obdgps_out(u8 *dataout)
 		{//组包 但一包数据不超过512个字节
 			if(Lbigmem.msg[Lbigmem.msgout].len >= EAT_RTX_BUF_LEN_MAX)
 			{
-				user_debug("lilei--send LbigBuf len>512\r\n");	
+				
 		  	}
 		  	else
 			{
 		  		if(datalen + Lbigmem.msg[Lbigmem.msgout].len < EAT_RTX_BUF_LEN_MAX)
 				{
-					user_debug("lilei--send LbigBuf-datalen=%d\r\n",Lbigmem.msg[Lbigmem.msgout].len);								//add by lilei-2016-0613
+					
 		  			memcpy((s8 *)&Lbigmemory_send[datalen], (s8 *)&Lbigmemory[Lbigmem.msg[Lbigmem.msgout].index], Lbigmem.msg[Lbigmem.msgout].len);
 		  			datalen += Lbigmem.msg[Lbigmem.msgout].len;
 		  		}

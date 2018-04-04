@@ -395,6 +395,7 @@ void app_main(void *data)
 	mdm_Init();
 	obd_init();
 	gps_Init();
+	Proticol_Init();
 	linking_init();
 	//anydata_init();     					
 	memcpy(&app_para, para, sizeof(EatEntryPara_st));
@@ -404,7 +405,7 @@ void app_main(void *data)
 		eat_update_app_ok();
 	}
 	user_debug_enable();      //add by lilei
-	user_debug("i:Car-Eye-DTU-(V02.00)-1737\r\n");
+	user_debug("i:Car-Eye-DTU-(V02.00)-0403\r\n");
 	
 	//app_handle();
 	TastStartSet_00(1);

@@ -781,7 +781,7 @@ u8 obd_read_sub_ex(u8 cmd1, u8 cmd2, u8 *datatemp, u32 len){
 	u8 databack[48], databacklen;
 	u8 *imei;
 	
-	if(0x00 == obd_produce_deal(cmd1, cmd2, datatemp, len))return 0;//2015/11/18 17:48 fangcuisong
+	if(0x00 == obd_produce_deal(cmd1, cmd2, datatemp, len))return 0;
 	//user_debug("OBD Data[%d,%02x-%02x]", len, cmd1, cmd2);
 	//以下指令为生产指令 需要优先处理
 	
@@ -1155,7 +1155,7 @@ u8 obd_cmd84(u8 cmd_sub, u8 *data, u16 datalen)
           				if(0 == update_obdapp())
 					{
           					user_infor("e:OBD_APP update ok");
-						user_debug("lilei-APP_UPDATE_FLAG=%02X,Lupdate_version=%04X,Lcustomer_id=%04X",APP_UPDATE_FLAG,Lupdate_version,Lcustomer_id);
+						user_debug("APP_UPDATE_FLAG=%02X,Lupdate_version=%04X,Lcustomer_id=%04X",APP_UPDATE_FLAG,Lupdate_version,Lcustomer_id);
 						back2SVR8405(0,APP_UPDATE_FLAG,Lupdate_version,Lcustomer_id);     //add by lilei-2016-0829新增升级成功与失败的状态
 						APP_UPDATE_FLAG = 0;
           					APP_UPDATE_FLAGEX = 0;
@@ -1163,7 +1163,7 @@ u8 obd_cmd84(u8 cmd_sub, u8 *data, u16 datalen)
           				}
           				else
 					{
-					       user_debug("lilei-APP_UPDATE_FLAG=%02X,Lupdate_version=%04X,Lcustomer_id=%04X",APP_UPDATE_FLAG,Lupdate_version,Lcustomer_id);
+					       user_debug("APP_UPDATE_FLAG=%02X,Lupdate_version=%04X,Lcustomer_id=%04X",APP_UPDATE_FLAG,Lupdate_version,Lcustomer_id);
 					       back2SVR8405(1,APP_UPDATE_FLAG,Lupdate_version,Lcustomer_id);    //add by lilei-2016-0829新增升级成功与失败的状态
 			    	  		user_debug("i:OBD_APP update error");
 					      APP_UPDATE_FLAG = 0;
@@ -1191,13 +1191,13 @@ u8 obd_cmd84(u8 cmd_sub, u8 *data, u16 datalen)
 		  APP_UPDATE_FLAG = 0;
 		  APP_UPDATE_FLAGEX = 0;
 	   }
-	   else    //效验证失败     						//add by  lilei-2016-0829 
+	   else    //效验证失败     						
 	   {
 
-			back2SVR8404(0x02);     					 //add by  lilei-2016-0829   			
-			back2OBD_2Bytes(0xc4, 0x00);				 //add by  lilei-2016-0829 
-			APP_UPDATE_FLAG = 0;					 //add by  lilei-2016-0829 
-		  	APP_UPDATE_FLAGEX = 0;					 //add by  lilei-2016-0829 
+			back2SVR8404(0x02);     					 			
+			back2OBD_2Bytes(0xc4, 0x00);				  
+			APP_UPDATE_FLAG = 0;					
+		  	APP_UPDATE_FLAGEX = 0;					
 
 	   }
 		
@@ -1636,7 +1636,7 @@ u8 obd_cmd8e(u8 cmd_sub, u8 *data, u16 datalen, u32 time){//直接透传到服务器
   			//anydata_EVT_MODEM_OFF();//上电报警     //add by lilei-2016--823
   		}
   	}
-	user_debug("lilei-Send serve 0x8e\r\n");
+	user_debug("Send serve 0x8e\r\n");
 	SVR_FrameSendEx(data, datalen, time);
 	return 0;
 }
@@ -1826,11 +1826,11 @@ _LOOP_:
          		obddbex.msgnumex --;
 	  	   	if(0x20 == cmdsub)
 			{
-  		      		if(1 == gps_assist_toOBD())
-				{//返回星历数据
+  		      		//if(1 == gps_assist_toOBD())
+				//{//返回星历数据
 			    	   //星历数据无效
 			   	      back2OBD_7f(CMD_GPS_ASSIST, 0);
-			      }
+			      //}
        	 	}
        	 	return 1;
 	  	   	break;
@@ -1873,7 +1873,7 @@ _LOOP_:
 			   	 if(0 == APP_UPDATE_FLAG)
 				 {//0 == SVR_SvrChange(db_svr_addr1get(), db_svr_port1get())){
 			   	 	   back2OBD_2Bytes(CMD_UPDATE + 0x40, obddbex.msgex[obddbex.msgoutex].cmd_sub);
-			   	     	   SVR_Cmd84(OBD_SENDTO_MDM_BUF[6]);//请求数据下载
+			   	     	   //SVR_Cmd84(OBD_SENDTO_MDM_BUF[6]);//请求数据下载
 			   	     	   APP_UPDATE_FLAGEX = OBD_SENDTO_MDM_BUF[6];
 			   	 }
 			   	 else
@@ -1903,7 +1903,7 @@ _LOOP_:
 			   user_debug("\r\n--lilei-Recieve -8d-%02X\r\n",cmdsub);
 			   cmd = CMD_VEHICLE_STATUS;
 			   //user_debug("888888d[%02x,%02x,%d]", cmdsub, cmd,time);
-			   SVR_FrameSendEx(OBD_SENDTO_MDM_BUF, dataindex, time);//直接透传到服务器
+			  // SVR_FrameSendEx(OBD_SENDTO_MDM_BUF, dataindex, time);//直接透传到服务器
 			   if(0x04 == cmdsub)
 			   {//警告类信息除发送到服务器 还需要以短信方式提供给车主
 			   	   if(0x01 == OBD_SENDTO_MDM_BUF[6])
@@ -1950,7 +1950,7 @@ _LOOP_:
 		case 0x7f:						//0x7f数据直接丢弃  2015/10/29 15:50 fangcuisong
 			   break;
 		default:
-		     	SVR_FrameSendEx(OBD_SENDTO_MDM_BUF, dataindex, time);//直接透传到服务器
+		     	//SVR_FrameSendEx(OBD_SENDTO_MDM_BUF, dataindex, time);//直接透传到服务器
 		     	break;
 	}
 	if(obddbex.msgnumex)
@@ -2041,7 +2041,7 @@ u8 obd_datadeal(void)
 			   	 //back2OBD_2Bytes(CMD_UPDATE + 0x40, obddb.msg[obddb.msgout].cmd_sub);
 			   	 if(0 == APP_UPDATE_FLAG){//0 == SVR_SvrChange(db_svr_addr1get(), db_svr_port1get())){
 			   	 	   back2OBD_2Bytes(CMD_UPDATE + 0x40, obddb.msg[obddb.msgout].cmd_sub);
-			   	     SVR_Cmd84(OBD_SENDTO_MDM_BUF[6]);//请求数据下载
+			   	     //SVR_Cmd84(OBD_SENDTO_MDM_BUF[6]);//请求数据下载
 			   	     APP_UPDATE_FLAGEX = OBD_SENDTO_MDM_BUF[6];
 			   	 }
 			   	 else{
@@ -2066,7 +2066,7 @@ u8 obd_datadeal(void)
 		case CMD_VEHICLE_STATUS://车辆状态 透传到服务器
 			   cmdsub = obddb.msg[obddb.msgout].cmd_sub;
 			   cmd = CMD_VEHICLE_STATUS;
-			   SVR_FrameSendEx(OBD_SENDTO_MDM_BUF, dataindex, time);//直接透传到服务器
+			   //SVR_FrameSendEx(OBD_SENDTO_MDM_BUF, dataindex, time);//直接透传到服务器
 			   if(0x04 == cmdsub){//警告类信息除发送到服务器 还需要以短信方式提供给车主
 			   	   if(0x01 == OBD_SENDTO_MDM_BUF[6]){//车辆电压过低
 			   	   	AT_SMSENDex(NULL,"vehicle-voltage too low, please start vehicle!");
@@ -2083,12 +2083,12 @@ u8 obd_datadeal(void)
 			   else if(0x0b == cmdsub){//震动报警
 			   	obd_vehiclelost_check(&OBD_SENDTO_MDM_BUF[7]);
 			   }
-			   else if(cmdsub==0x10)                  										 //add  by lilei--OBD发送报警类型例超速怠速疲劳
+			   else if(cmdsub==0x10)                  										 
 			   {
 			   		user_debug("Receive -Obd-Over-Speed \r\n");
-			   	  	AT_CREC("C:\\User\\Over-Speed.amr", 99); 							//add by lilei-2016-0912 超速报警                                   
+			   	  	AT_CREC("C:\\User\\Over-Speed.amr", 99); 							                                   
 			   }
-			   else if(cmdsub==0x11)													//add by lilei-2016-0912 疲劳驾驶报警
+			   else if(cmdsub==0x11)													
 			   {
 			   		 user_debug("Receive -Obd-Tired-Drive \r\n");
 					 AT_CREC("C:\\User\\Tired-Drive.amr", 99); 
@@ -2096,13 +2096,13 @@ u8 obd_datadeal(void)
 			   else if(cmdsub==0x12)
 			   {
 			   		 user_debug("Receive -Obd-Idle-Speed \r\n");
-					 AT_CREC("C:\\User\\Idle-Speed.amr", 99); 							//add by lilei-2016-0912 怠速时间过长报警
+					 AT_CREC("C:\\User\\Idle-Speed.amr", 99); 							
 			   }
 			   break;
-		case 0x7f:                                                    									 //0x7f 丢弃不发送平台--add by lilei-2016-04-27
+		case 0x7f:                                                    									
 			  break;
 		default:
-		     SVR_FrameSendEx(OBD_SENDTO_MDM_BUF, dataindex, time);						//直接透传到服务器
+		     //SVR_FrameSendEx(OBD_SENDTO_MDM_BUF, dataindex, time);						//直接透传到服务器
 		     //debug_hex("OBD:",OBD_SENDTO_MDM_BUF, dataindex);
 		     //应答OBD
 	       //back2OBD_3Bytes(obddb.msg[obddb.msgout].cmd,obddb.msg[obddb.msgout].cmd_sub,0x01);

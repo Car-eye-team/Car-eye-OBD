@@ -112,7 +112,7 @@ void Lbdata1_insert(u8 id, u32 datain)
 }
 void Lbdata1_insert_done(void){
 	Lbdata1.unitesdone = 0x88;
-	//anydata_dataunit_done();				//add by lilei-2016-0823
+	
 }
 
 void Lbdata2_insert(u8 id, u32 datain){
@@ -150,105 +150,15 @@ u8 Lbdata_toserver(void)
 	dataflag = 0;
 	if(0x88 == Lbdata1.unitesdone)
 	{
-		  timeflag = 0;
-		  for(unitindex = 0; unitindex < Lbdata1.num; unitindex ++)
-		  {
-		  	if(162 == Lbdata1.units[unitindex].id)
-			{
-		  		timeflag = Lbdata1.units[unitindex].data;
-		  		break;
-		  	}
-		  }
-		  if(timeflag != 0)
-		  {
-
-		  
-		      u32index = 0;
-	        	backtosvr[u32index ++] = 0x14;
-	        	backtosvr[u32index ++] = 0x03;
-	        	for(unitindex = 0; unitindex < Lbdata1.num; unitindex ++)
-			{//2015/10/29 17:55 fangcuisong
-	        		if(162 == Lbdata1.units[unitindex].id)
-				{
-	        			break;
-	        		}
-	        	}
-	        	if(unitindex < Lbdata1.num)
-			{
-	        	  	backtosvr[u32index ++] = ((Lbdata1.num - 1) >> 8)& 0x00ff;
-	            		backtosvr[u32index ++] = ((Lbdata1.num - 1) >> 0) & 0x00ff;
-	        	}
-	        	else
-			{
-	            		backtosvr[u32index ++] = (Lbdata1.num >> 8)& 0x00ff;
-	            		backtosvr[u32index ++] = (Lbdata1.num >> 0) & 0x00ff;
-	         	}
-	        	for(unitindex = 0; unitindex < Lbdata1.num; unitindex ++)
-			{
-	        		if(Lbdata1.units[unitindex].id != 162)
-				{
-	        	    		backtosvr[u32index ++] = Lbdata1.units[unitindex].id;
-	        	    		backtosvr[u32index ++] = (Lbdata1.units[unitindex].data >> 24)& 0x00ff;
-	        	    		backtosvr[u32index ++] = (Lbdata1.units[unitindex].data >> 16)& 0x00ff;
-	        	    		backtosvr[u32index ++] = (Lbdata1.units[unitindex].data >> 8)& 0x00ff;
-	        	    		backtosvr[u32index ++] = (Lbdata1.units[unitindex].data >> 0)& 0x00ff;
-	          		}
-	        	}
-	    }
-	    else user_debug("i:gps-time is 0");
-	    Lbdata1.num = 0;
-	    Lbdata1.unitesdone = 0x00;
-	    datalent = SVR_DataMessageEx(backtosvr, u32index, timeflag);
-	    user_debug("\r\nlilei-ProBak-1403-datalen=%d\r\n",datalent);
-	    if(datalent != 0)
-	    {
-	        memcpy((s8 *)&Lbigmemory_send[datalen], (s8 *)backtosvr, datalent);
-	        datalen += datalent;
-	        dataflag |= 0x01;
-	    }
-  }
-  if(0x88 == Lbdata2.unitesdone)
-  {
-  		
-  	  	u32index = 0;
-  	  	backtosvr[u32index ++] = 0x6c;
-	    	backtosvr[u32index ++] = 0x05;
-	    	backtosvr[u32index ++] = (Lbdata2.num >> 8)& 0x00ff;
-	    	backtosvr[u32index ++] = (Lbdata2.num >> 0) & 0x00ff;
-	    	for(unitindex = 0; unitindex < Lbdata2.num; unitindex ++)
-		{
-	    		backtosvr[u32index ++] = Lbdata2.units[unitindex].id;
-	    		backtosvr[u32index ++] = (Lbdata2.units[unitindex].data >> 24)& 0x00ff;
-	    		backtosvr[u32index ++] = (Lbdata2.units[unitindex].data >> 16)& 0x00ff;
-	    		backtosvr[u32index ++] = (Lbdata2.units[unitindex].data >> 8)& 0x00ff;
-	    		backtosvr[u32index ++] = (Lbdata2.units[unitindex].data >> 0)& 0x00ff;
-	    	}
-	    	Lbdata2.num = 0;
-	    	Lbdata2.unitesdone = 0x00;
-	    	    
-	    	datalent = SVR_DataMessage(backtosvr, u32index);
-		//user_debug("\r\nlilei---pro back 6c05-len=%d\r\n",datalent);
-	    	if(datalent != 0)
-		{
-	    		if(0 == (Lbdata2num % 30))
-			{//2015/5/11 22:21 FangCuisong
-	        		memcpy((s8 *)&Lbigmemory_send[datalen], (s8 *)backtosvr, datalent);
-	        		datalen += datalent;
-	        		Lbdata2num = 1;
-	      		}
-	      		else Lbdata2num ++;
-	    	}
-	    	dataflag |= 0x80;
-  	}
-	if(datalen != 0)
-	{
-		u8result = AT_CIPSEND(Lbigmemory_send, datalen);//gprs_send(SEV_APP_BUF, dataindex);
-	  	if(u8result != 0)
-		{
-	  		user_debug("i:Lbdata_toserver error[%d]", u8result);
-	 	  	bigmem_obdgps_in(Lbigmemory_send, datalen);//时间肯定有效
-	  	}
-	}
+		  Lbdata1.num = 0;
+	    	 Lbdata1.unitesdone = 0x00;
+		 user_debug("Fill in Gps 808\r\n");
+		 ProFrame_Pack(ProTBuf,UP_POSITIONREPORT,&ProPara,ProTempBuf);
+		
+	 }
+	  
+  
+ 
 	user_debug("i:Lbdata_toserver:[%d-%02x]", datalen,dataflag);
 	return 1;
 }
@@ -331,8 +241,7 @@ void mdm_Init(void){
 	Lbdata1.unitesdone = 0;
 	Lbdata2.unitesdone = 0;
 
-	Lobd_start_mode=0;       										//add by lilei-2016-05-04-针对睡眠唤醒不发送8e 02处理
-}
+	Lobd_start_mode=0;       										
 
 /*清接收缓冲区
 *为了防止modem发送的数据被异常清除，该接口必须由APP调用
@@ -577,6 +486,7 @@ void app_modem(void *data)
 		{
 			if(0 == Up_Register())
 			{
+				//user_debug("Register Success\r\n");
 				m2m_statusSet(6);
 				errornum = 0;
 			}
@@ -586,6 +496,7 @@ void app_modem(void *data)
 			   	if(errornum >= 3)
 			   	{
 			   		m2m_statusSet(4);
+					user_debug("-set status :4\r\n");
 			   		errornum = 0;
 			   	}
 		  	}
@@ -605,6 +516,7 @@ void app_modem(void *data)
 			if(0 == UP_Authentication())
 			{
 				errornum = 0;
+				user_debug("Authentication success\r\n");
 				m2m_statusSet(7);
 			}
 			else
@@ -618,34 +530,10 @@ void app_modem(void *data)
 			}
 		}
 		if(7 == m2m_status())
-		{//时钟同步
-			if(0 == G_system_time_synchron())
-			{
-				errornum = 0;
-				m2m_statusSet(8);
-				SVR_routEx();//上传保存在flash中的行程数据
-			  	MDM_unlinkset(0x55);
-			  
-			  	eat_sleep(200);
-		
-			}
-			else
-			{
-			  	errornum ++;
-			  	if(errornum >= 3)
-				{
-			   		m2m_statusSet(4);
-			   		errornum = 0;
-			  	}
-			}
-		}
-		
-		if(gpsonlineenbale != 0x55 && m2m_status() > 4)
-		{//M2M必须保存有星历数据
-			u8result = gps_assist_online_from_zgex();
-			if(0 == u8result)gpsonlineenbale = 0x55;
-		}
-
+		{
+			m2m_statusSet(8);
+			MDM_unlinkset(0x55);		
+		}		
 		obd_datadeal();//OBD数据处理
 		gps_tosvr();//GPS数据返回
 		if(m2m_status() > 6)
@@ -660,50 +548,46 @@ void app_modem(void *data)
 				}
 			
 			}
-			bigmem_obdgps_tosvr();//返回缓冲区的数据 时间先后顺序没关系 服务器可以处理
+			//bigmem_obdgps_tosvr();//返回缓冲区的数据 时间先后顺序没关系 服务器可以处理
 			if(0x55 == SVR_EVENT_30)
 			{//每30秒需要处理的事情
-				SVR_heard();
+				//SVR_heard();
 				svr_event30_enable(0);
-				//anydata_test();//test
 			}
 		}
 		if(mdm.MDMmsgNum != 0)
 		{//数据处理
 			for(u8t1 = 0; u8t1 < MDM_MSG_MAX; u8t1 ++)
 			{
-			    datalen = MDM_DataToApp(&dataptr);
-			    if(datalen)
-			    {
-				    u8result = SVR_FameDeal(dataptr, datalen);
-				    if(0x7f == u8result);//非OBD数据 继续处理
-				    else break;
-			    }
-			    else break;
+			    SVR808_FameDeal();
+			    //datalen = MDM_DataToApp(&dataptr);
+			    //if(datalen)
+			    //{
+				 //   u8result = SVR_FameDeal(dataptr, datalen);
+				    //if(0x7f == u8result);//非OBD数据 继续处理
+				    //else break;
+			    //}
+			    //else break;
 		  	}
 		}
 		else eat_sleep(5);//最小睡眠时间为5MS
 		
 		if(0x55 == SVR_EVENT_01)
 		{//每1秒需要处理的事情
-			ADCNUM ++;
-			//if(ADCNUM >= 5)anydata_test();
-			
-		 
+			ADCNUM ++;					 
 	  		if(ADCNUM >= 5 && 0 == APP_UPDATE_FLAGEX)
 			{
-			    
- 				
-	  			m2m_ccidread();
+				m2m_ccidread();
+				user_debug("send heart 808\r\n");
+				ProFrame_Pack(ProTBuf,UP_HEARTBEAT,&ProPara,ProTempBuf);
 	  			if(m2m_status() > 7)
-				{
-					
+				{				
 	  		    		if(0 == Lobd_start_mode)
 					{
-						user_debug("\r\n-lilei-send 0x8e 0x02\r\n");
+						
 	  		    			back2OBD_2Bytes(0x8e,0x02); 
 				    	}
-				    	//anydata_cmd_deal(); 				//add by lilei-2016-0823
+				  
 			  	}
 	  			if(1 == AT_CADC())
 				{//电压异常 需要报警
@@ -729,7 +613,7 @@ void app_modem(void *data)
 	  			db_obd_save();
 	  			obd_cmd8d(1);
 	  			ADCWARM = 0x55;//报警信息只发送1次 再次发送需要设备重新启动或从睡眠中唤醒
-	  			//anydata_EVT_MODEM_REMOVAL();         //add by lilei-2016-0823
+	  		
 	  		}
 	  	
 			if(0 == APP_UPDATE_FLAGEX)

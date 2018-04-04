@@ -1866,7 +1866,7 @@ void m2m_gprslink(void){
 	}
 	AT_delay(400);
 	//连接服务器
-	if(0 == AT_CIPSTART("39.108.246.45",9999))//Lm2mstatus.seraddr, Lm2mstatus.port))
+	if(0 == AT_CIPSTART("39.108.229.40",9999))//"39.108.246.45",9999))//Lm2mstatus.seraddr, Lm2mstatus.port))
 	{
 		Lm2mstatus.gprslink = 0;
 		user_debug("i:m2m_gprslink:CIPSTART error:%s[%d]","39.108.246.45",9999);//Lm2mstatus.seraddr,Lm2mstatus.port);

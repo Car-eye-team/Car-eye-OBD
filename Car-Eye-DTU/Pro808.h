@@ -60,14 +60,14 @@ typedef struct
 {
    	u8 flag;
    	unsigned short len;
-   	unsigned char buffer[256];
+   	unsigned char buffer[400];
 
 }_SendBuffer;
 typedef struct
 {
    	unsigned head;
    	unsigned char tail;
-   	_SendBuffer SendBuf[OBDBUFFER_SIZE];
+   	_SendBuffer SendBuf[LOOP_BUFFER_SIZE];
 
 }_SendDataLoop;
 
@@ -172,7 +172,24 @@ typedef struct
 	u8 time[6];					//时间 BCD[6] YY-MM-DD-hh-mm-ss(GMT+8时间，本标准之后涉及的时间均采用此时区)//
 }sPositionbasicinfo;
 
+
+typedef struct
+{
+
+   u8  Sim808Step;
+   u8  AnsWerFalg;
+   u8 AuthenFlag;
+   u16 AutionLen;
+   u8 AutionBuf[16];
+
+}SIM808DEAL;
+
+
 #pragma pack()
+
+extern u8 ProTBuf[512];
+extern u8 ProTempBuf[512];
+extern sProPara  ProPara;
 u16 ProFrame_Pack(u8 *dec,u16 Cmd,sProPara* Para,u8* Tempbuf);
 u8 SVR808_FameDeal(void);
 u8   Up_Register(void);

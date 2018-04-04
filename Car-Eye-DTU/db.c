@@ -276,8 +276,7 @@ u8 db_init(void)
 		user_debug("i:M2mVer=%s\r\n",M2mVer);
 
 	}
-          //db_svr_port1set(21989);    //add by lilei-2016-0523
-	   //db_svr_save();			  //add by  lilei-2016-0523 
+       
 	return u8result;
 }
 
@@ -756,8 +755,8 @@ u8 db_svr_init(void){
 		  	//user_debug("svr_file_init OK[%s,%d][%s,%d]",Lsvrinfor.svraddr, Lsvrinfor.port);
 		  	if(strlen((s8 *)Lsvrinfor.svraddr1) < 8 || 0 == Lsvrinfor.port1)
 			{
-		  		strcpy((s8 *)Lsvrinfor.svraddr1, "123.58.32.89");
-		      		Lsvrinfor.port1 = 21989;
+		  		strcpy((s8 *)Lsvrinfor.svraddr1, "39.108.229.40");
+		      		Lsvrinfor.port1 = 9999;
 		  		return 0xff;
 		  	}
 		  	return 0;
@@ -850,9 +849,9 @@ u8 db_svr_default(void){
 	
 	
 	Lsvrinfor.backcircle = 0;//默认为0
-	strcpy((s8 *)Lsvrinfor.svraddr1, "123.58.32.89");
-	Lsvrinfor.port1 = 21989;
-	Lsvrinfor.media = 0;//多媒体使能 2015/7/10 9:56 FangCuisong 默认多媒体关闭
+	strcpy((s8 *)Lsvrinfor.svraddr1, "39.108.229.40");
+	Lsvrinfor.port1 = 9999;
+	Lsvrinfor.media = 0;
 	memset(Lsvrinfor.svrtell_t, 0, 12);
 	memset(Lsvrinfor.svrtell_r, 0, 12);
 	memset(Lsvrinfor.telx[0], 0, 12);
@@ -873,7 +872,7 @@ void db_svr_addrset(u8 *addr){
 	strcpy((s8 *)Lsvrinfor.svraddr, (s8 *)addr);
 }
 u8 *db_svr_addrget(void){
-	if(0 == strlen((s8 *)Lsvrinfor.svraddr)){//2015/9/28 10:47 fangcuisong
+	if(0 == strlen((s8 *)Lsvrinfor.svraddr)){
 		strcpy((s8 *)Lsvrinfor.svraddr, "106.3.226.182");
 	}
 	user_debug("i:AanIP=%s,%d", (s8 *)Lsvrinfor.svraddr, Lsvrinfor.port);
@@ -904,9 +903,9 @@ void db_svr_portset(u32 port){
 	Lsvrinfor.port = port;
 }
 u32 db_svr_portget(void){
-	if(0 == Lsvrinfor.port)Lsvrinfor.port = 30005;//2015/9/28 14:06 fangcuisong
+	if(0 == Lsvrinfor.port)Lsvrinfor.port = 9999;
 	if(Lsvrinfor.port != 30005){
-	   strcpy((s8 *)Lsvrinfor.svraddr, "106.3.226.182");
+	   strcpy((s8 *)Lsvrinfor.svraddr, "39.108.229.40");
 	   Lsvrinfor.port = 30005;
 	   db_svr_save();
   }
@@ -1129,9 +1128,7 @@ void db_gps_set(u32 lac, u32 loc){
 	static u8 dbsave = 0;
 	
 	if(0 == lac || 0 == loc)return;
-	if(Lenginespeedmax_get() < 600 && Lvehiclespeedmax_get() < 20)return;//2015/11/27 11:27 fangcuisong 如果发动机转,车速均没有达到车量启动标准则直接返回
-	dbgps.lac = lac;
-	dbgps.lon = loc;
+	if(Lenginespeedmax_get() < 600 && Lvehiclespeedmax_get() < 20)return;
 	if(0 == dbsave){
 		db_gps_save();
 		dbsave = 0x55;

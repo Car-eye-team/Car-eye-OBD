@@ -26,7 +26,7 @@ static u8 GPS_UNIT_BUF_temp[GPS_UNIT_MAX + 1]; //GPS_UNIT_BUF
 static u32 GPS_UNIT_temp_LEN = 0;
 static u8 MOBILE_INFOR_BUF[MOBILE_INFOR_MAX + 1];
 static u32 GPS_UNIT_LEN = 0;
-static _GPSUNIT Lgpscur;//记录当前GPS参数
+ _GPSUNIT Lgpscur;//记录当前GPS参数
 static _GPSUNIT Lgpscursend;//记录当前需要发送的数据
 static _GPS Lgps;
 static u8 Lgps_enable_flag = 0;//GPS数据有效标志
@@ -99,10 +99,11 @@ void gps_3g_check_set(u8 flag){
 		gps_3g_check = 0x04;
 		LGPS_FRAME_SEND_TIME_EX = 0x55;
 	}
-
+}
 /*返回GPS状态
 */
-u8 gps_status_get(void){
+u8 gps_status_get(void)
+{
 	return Lgps_status;
 }
 /*获取GPS速度
@@ -570,7 +571,7 @@ u8 gps_data_transform(void)
 	    Lgpscursend.fuel = u32t2;
 	    u32t1 = 0;
 	    u32t2 = 0;
-	    gps_gsmpositionget(&u32t1, &u32t2);                                  //lilei-? -时间参数函数没有赋值2106-10-08
+	    gps_gsmpositionget(&u32t1, &u32t2);                                
 	    Lgpscursend.celid = u32t1;
 	    Lgpscursend.lacid = u32t2;                                                     
 	    
@@ -707,91 +708,31 @@ u8 gps_dealex(void){
 	Lgpscur.angle = (Lgpscur.angle << 8) + GPS_UNIT_BUF_temp[dataindex ++];
 	Lgpscur.angle = (Lgpscur.angle << 8) + GPS_UNIT_BUF_temp[dataindex ++];
 	Lgpscur.angle = (Lgpscur.angle << 8) + GPS_UNIT_BUF_temp[dataindex ++];
+
+	
 	Lgpscur.ymd = GPS_UNIT_BUF_temp[dataindex ++];
+	Lgpscur.Time808[2]=GPS_UNIT_BUF_temp[dataindex];
 	Lgpscur.ymd = (Lgpscur.ymd << 8) + GPS_UNIT_BUF_temp[dataindex ++];
+	Lgpscur.Time808[1]=GPS_UNIT_BUF_temp[dataindex];
 	Lgpscur.ymd = (Lgpscur.ymd << 8) + GPS_UNIT_BUF_temp[dataindex ++];
+	Lgpscur.Time808[0]=GPS_UNIT_BUF_temp[dataindex];
 	Lgpscur.ymd = (Lgpscur.ymd << 8) + GPS_UNIT_BUF_temp[dataindex ++];
+
+	
 	Lgpscur.time = GPS_UNIT_BUF_temp[dataindex ++];
+	Lgpscur.Time808[3]=GPS_UNIT_BUF_temp[dataindex];
 	Lgpscur.time = (Lgpscur.time << 8) + GPS_UNIT_BUF_temp[dataindex ++];
+	Lgpscur.Time808[4]=GPS_UNIT_BUF_temp[dataindex];
 	Lgpscur.time = (Lgpscur.time << 8) + GPS_UNIT_BUF_temp[dataindex ++];
+	Lgpscur.Time808[5]=GPS_UNIT_BUF_temp[dataindex];
 	Lgpscur.time = (Lgpscur.time << 8) + GPS_UNIT_BUF_temp[dataindex ++];
 	
 	Lgpscur.itemflag = 0x3f;
-  Lgps_enable_flag = 0x55;
+      Lgps_enable_flag = 0x55;
+	UtcToBeiJingTIme(Lgpscur.Time808);
 	gps_data_transform();
 	return 0;
 }
-
-/*
-*GPS数据返回到服务器
-*
-********************************************/
-/*u8 gps_tosvr(void){
-	u8 backtosvr[64];
-	u8 index;
-	
-	if(Lgps.num < 1)return 0;
-	user_infor("gps_tosvr >>");
-	index = 0;
-	memset(backtosvr, 0, 64);
-	G_system_time_Set(Lgps.unit[Lgps.out].ymd, Lgps.unit[Lgps.out].time);
-	backtosvr[index ++] = 0x14;
-	backtosvr[index ++] = 0x03;
-	
-	backtosvr[index ++] = Lgps.unit[Lgps.out].latflag;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].latitude >> 24) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].latitude >> 16) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].latitude >> 8) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].latitude >> 0) & 0x00ff;
-	
-	backtosvr[index ++] = Lgps.unit[Lgps.out].longflag;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].longitude >> 24) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].longitude >> 16) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].longitude >> 8) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].longitude >> 0) & 0x00ff;
-	
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].speed >> 24) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].speed >> 16) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].speed >> 8) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].speed >> 0) & 0x00ff;
-	
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].angle >> 24) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].angle >> 16) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].angle >> 8) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].angle >> 0) & 0x00ff;
-	
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].celid >> 24) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].celid >> 16) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].celid >> 8) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].celid >> 0) & 0x00ff;
-	
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].lacid >> 24) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].lacid >> 16) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].lacid >> 8) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].lacid >> 0) & 0x00ff;
-	index ++;
-	index ++;
-	index ++;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].distance >> 24) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].distance >> 16) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].distance >> 8) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].distance >> 0) & 0x00ff;
-	
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].fuel >> 24) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].fuel >> 16) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].fuel >> 8) & 0x00ff;
-	backtosvr[index ++] = (Lgps.unit[Lgps.out].fuel >> 0) & 0x00ff;
-	
-	SVR_FrameSendExEx(backtosvr, index, Lgps.unit[Lgps.out].timeflag);
-	Lgps.out ++;
-	if(Lgps.out >= GPS_DATA_MAX)Lgps.out = 0;
-	if(0x55 == GPS_SEND_NUMflag)eat_sleep(1);
-	GPS_SEND_NUMflag = 0x55;
-	Lgps.num --;
-	GPS_SEND_NUMflag = 0x00;
-	
-	return 0;
-}*/
 
 /*
 *GPS数据返回到服务器
@@ -815,7 +756,7 @@ u8 gps_tosvr(void)
 			Lgpscursend.itemflag = 0;
 			return 0;
 		}*/
-		user_debug("\r\ni:lilei--lat=[%d] lon=[%d],Lgpscursend.latflag=%d\r\n",Lgpscursend.latitude,Lgpscursend.longitude,Lgpscursend.latflag);   //add by lilei-2016-0512
+		user_debug("\r\ni:--lat=[%d] lon=[%d],Lgpscursend.latflag=%d\r\n",Lgpscursend.latitude,Lgpscursend.longitude,Lgpscursend.latflag);   //add by lilei-2016-0512
 		if(0x55 == Lgpscursend.enable)eat_sleep(5);
 		Lgpscursend.enable = 0x55;
 		data = Lgpscursend.latflag;
@@ -836,13 +777,13 @@ u8 gps_tosvr(void)
 			if(Lobdgps.id[index]==0)
 			{
 				continue;
-			}                                                     //add by lilei--2016-04-27				
+			}                                                  			
 			Lbdata1_insert(Lobdgps.id[index], Lobdgps.data[index]);
 		}
 		//anydata_lat_set(Lgpscursend.latitude);
 		//anydata_lon_set(Lgpscursend.longitude);
 		//anydata_heading_set(Lgpscursend.angle);
-		//anydata_gpstime_set(Lgpscursend.timeflag);     //add by lilei-2016--0823
+		//anydata_gpstime_set(Lgpscursend.timeflag);     
 	  	Lbdata1_insert_done();
 	  	Lgpscursend.itemflag = 0x00;
 	  	Lgpscursend.enable = 0x00;
@@ -869,16 +810,13 @@ u8 gps_tosvr(void)
 		Lbdata1_insert(GPS_DATA_longitude_id, Lgps.unit[Lgps.out].longitude);
 		Lbdata1_insert(162, Lgps.unit[Lgps.out].timeflag);//时间戳必须有效
 		Lbdata1_insert(7, Lgps.unit[Lgps.out].speed);
-		//anydata_speed_set(Lgps.unit[Lgps.out].speed);      //add by lilei-2016-0823
+		//anydata_speed_set(Lgps.unit[Lgps.out].speed);      
 		Lbdata1_insert(GPS_DATA_angle_id, Lgps.unit[Lgps.out].angle);
 		Lbdata1_insert(GPS_DATA_celid_id, Lgps.unit[Lgps.out].celid);
 		Lbdata1_insert(GPS_DATA_lacid_id, Lgps.unit[Lgps.out].lacid);
 		Lbdata1_insert(164, gps_3g_check);
 		gps_3g_check = 0;//发送一次后该参数自动清0
-		//anydata_lat_set(Lgps.unit[Lgps.out].latitude);		//add by lilei-2016-0823
-		//anydata_lon_set(Lgps.unit[Lgps.out].longitude);		//add by lilei-2016-0823
-		//anydata_heading_set(Lgps.unit[Lgps.out].angle);		//add by lilei-2016-0823
-		//anydata_gpstime_set(Lgps.unit[Lgps.out].timeflag);	//add by lilei-2016-0823
+	
 		for(index = 0; index < Lobdgps.num; index ++)
 		{
 			//Lbdata1_insert(Lobdgps.id[index], Lobdgps.data[index]);
@@ -886,7 +824,7 @@ u8 gps_tosvr(void)
 			{
 
 				continue;
-			}							//add by lilei--2016-04-27                     
+			}							                  
 			Lbdata1_insert(Lgps.unit[Lgps.out].obddata.id[index], Lgps.unit[Lgps.out].obddata.data[index]);
 			//if(0x8c == Lgps.unit[Lgps.out].obddata.id[index])anydata_fuel_set(Lgps.unit[Lgps.out].obddata.data[index] *10);//本次油耗      add by lilei-2016-0823 
 			//else if(0x95 == Lgps.unit[Lgps.out].obddata.id[index])anydata_dist_set(Lgps.unit[Lgps.out].obddata.data[index] * 10);//本次里程 add by lilei-2016-0823
@@ -1363,4 +1301,78 @@ u8 gps_assist_online(void){
 	}
 	return 0;
 }
+
+
+void UtcToBeiJingTIme(char *TBuf)
+{
+
+     u8 iInterval=0;
+
+     u8 iDays=0;
+     u16 iYears=0;
+    
+       TBuf[3]+=8;
+	iInterval=(TBuf[3]/24);
+	TBuf[3]=TBuf[3]%24;
+       if(iInterval>0)
+       {
+
+
+		TBuf[2]+=1;
+		switch(TBuf[1])
+		{
+			case 1:
+			case 3:
+			case 5:
+			case 7:
+			case 8:
+			case 10:
+			case 12:
+			{
+				iDays = 31;
+			}
+			break;
+			case 2:
+			{
+				iYears=2000+TBuf[0];
+				if((((iYears%4)==0)&&((iYears%100)!=0))||((iYears%400)==0))
+				{
+					iDays=29;
+				}
+				else
+				{
+
+					iDays=28;
+				}
+			      
+			}
+			break;
+			case 4:
+			case 6:
+			case 9:
+			case 11:
+			{
+				iDays = 30;
+			}
+			break;
+
+		}
+		iInterval=TBuf[2]-iDays;
+		if(iInterval>0)
+		{
+			TBuf[2]=iInterval;
+			TBuf[1]+=1;
+			iInterval=TBuf[1]/12;
+			TBuf[1]=TBuf[1]%12;
+			if(iInterval>0)
+			{
+				TBuf[0]+=1;
+
+			}
+
+		}
+	 }
+     
+}
+
 

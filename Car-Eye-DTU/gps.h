@@ -51,6 +51,7 @@ typedef struct{
               bit31 = GPS数据有效
               */
   u32 _3gcheck;//3急检测数据
+   char Time808[6];  //add by lilei-2018-04-02
 }_GPSUNIT;
 
 
@@ -74,7 +75,7 @@ typedef struct{
     u32 vehiclespeed;//车速
 }_GPSM;
 
-
+ extern _GPSUNIT Lgpscur;
 void gps_Init(void);
 u8 gps_read(void);
 void app_gps(void *data);
@@ -99,6 +100,7 @@ u8 gps_assist_toOBD(void);
 u32 gps_time_get(void);
 u32 gps_data_read(u8 *data, u32 datalen);
 void gps_demo(void);
+void UtcToBeiJingTIme(char *TBuf);
 #ifdef __cplusplus
 }
 #endif
