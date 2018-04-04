@@ -424,7 +424,7 @@ void app_main(void *data)
 	//
      
 
-	/*//2015/12/18 16:48 方萃松 改到睡眠前设置该中断
+	
 	eat_gpio_setup(EAT_PIN24_COL4, EAT_GPIO_DIR_INPUT, EAT_GPIO_LEVEL_HIGH);
 	eat_int_setup(EAT_PIN24_COL4, EAT_INT_TRIGGER_LOW_LEVEL, 50, NULL);
 	eat_pin_set_mode(EAT_PIN24_COL4, EAT_PIN_MODE_GPIO);//设置为普通IO口 关闭中断
